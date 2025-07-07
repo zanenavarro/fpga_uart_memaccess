@@ -1,0 +1,14 @@
+# Vivado project files to ignore
+*.jou
+*.log
+*.str
+*.hw
+*.runs/
+*.cache/
+*.ip_user_files/
+*.Xil/
+webtalk*
+
+# Simulation dumps
+*.vcd
+*.wdb
