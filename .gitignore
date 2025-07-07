@@ -12,3 +12,4 @@ webtalk*
 # Simulation dumps
 *.vcd
 *.wdb
+*/fpga_uart_dma/
