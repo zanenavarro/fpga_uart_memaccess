@@ -64,7 +64,7 @@ baud_tick_gen baud_tick2 (
     .clk(clk),
     .rst(rst),
     .baud_rate(57600),
-    .baud_tick(baud_tick_half)
+    .baud_tick(baud_half_tick)
 );
 
 
