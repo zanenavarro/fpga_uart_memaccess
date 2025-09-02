@@ -1,3 +1,34 @@
+//------------------------------------------------------------------------------
+// Module Name    : cmd_execute_tb
+// Project        : Latch - UART-Based Register Access System
+// Description    : 
+//   Structural testbench for verifying the command execution datapath. 
+//   Instantiates and ties together the following pipeline of modules:
+//
+//       uart_rx (stubbed via byte_fifo signals)
+//           ↓
+//       cmd_parser → cmd_fifo → cmd_dispatcher → register_bank
+//
+//   Provides a foundation for driver/transaction-based stimulus and response
+//   checking. Captures outputs from dispatcher for scoreboard or monitor logic.
+//
+// Author         : Zane Navarro
+// Date Created   : 2025-08-31
+// Tool Target    : Vivado / Nexys A7 (Artix-7)
+// Synthesizable  : No (Testbench only)
+//
+// Interfaces     :
+//   - Clock/Reset generation (internal in TB)
+//   - Byte FIFO interface (stubbed UART RX input)
+//   - Command FIFO interface
+//   - Dispatcher → Register Bank interface
+//   - Dispatcher → TX interface (stubbed for extension)
+//
+// Revision History:
+//   2025-08-31 - Initial version of structural testbench
+//------------------------------------------------------------------------------
+
+import cmd_pkg::*;
 
 module cmd_execute_tb;
 
