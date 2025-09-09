@@ -1,13 +1,17 @@
-module uart_tx_tb;
+module uart_tx_tlb (
 
     // Clock and reset signals
-    logic clk;
-    logic rst;
+    input logic clk,
+    input logic rst,
 
     // ---> cmd_dispatcher
-    cmd_packet_t cmd_fifo_rd_data;
-    logic        cmd_fifo_rd_en;
-    logic        cmd_fifo_valid;
+    input cmd_packet_t cmd_fifo_rd_data,
+    input logic        cmd_fifo_rd_en,
+    input logic        cmd_fifo_valid,
+
+    // uart_tx --->
+    output logic tx_data
+);
     
     // cmd_dispatch <--> register
     logic        reg_read_en;
@@ -25,9 +29,6 @@ module uart_tx_tb;
     logic        resp_fifo_rd_en;
     logic        resp_fifo_valid;
 
-
-    // uart_tx --->
-    logic tx_data;
 
     /////////////////////////////////
     ///////////////////// CMD_DISPATCH
@@ -129,18 +130,5 @@ module uart_tx_tb;
     );
     /////////////////////////////////
 
-
-    // Clock generation
-    localparam time CLK_PERIOD = 10ns;  // 100 MHz
-
-    initial clk = 0;
-    always #(CLK_PERIOD/2) clk = ~clk;
-
-    // Reset generation
-    initial begin
-        rst = 0;
-        #100;        // hold reset low for 100ns
-        rst = 1;
-    end
 
 endmodule

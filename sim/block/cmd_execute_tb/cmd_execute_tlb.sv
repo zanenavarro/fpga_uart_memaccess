@@ -25,21 +25,27 @@
 //   - Dispatcher → TX interface (stubbed for extension)
 //
 // Revision History:
-//   2025-08-31 - Initial version of structural testbench
+//   2025-09-08 - Initial version of structural testbench
 //------------------------------------------------------------------------------
 
 import cmd_pkg::*;
 
-module cmd_execute_tb;
-
-    // clocks
-    logic        clk;
-    logic        rst;
+module cmd_execute_tb(
+    input logic         clk,
+    input logic         rst,
 
     // ---> cmd_parser
-    logic        byte_fifo_valid;
-    logic [7:0]  byte_fifo_data;
-    logic        byte_fifo_rd_en;
+    input logic         byte_fifo_valid,
+    input logic [7:0]   byte_fifo_data,
+    input logic         byte_fifo_rd_en,
+
+
+    // cmd_dispatcher --->
+    output cmd_packet_t cmd_resp_wr_data,
+    output logic        cmd_resp_wr_en;
+
+);
+
  
 
     // cmd parser --> cmd_fifo
@@ -130,8 +136,8 @@ module cmd_execute_tb;
 
 
         // output to RESP FIFO
-        .data_out_tx(data_out_tx),
-        .out_tx_en(out_tx_en)
+        .data_out_tx(cmd_resp_wr_data),
+        .out_tx_en(cmd_resp_wr_en)
     );
 
     /////////////////////////////////
@@ -149,20 +155,6 @@ module cmd_execute_tb;
         .read_data(reg_read_data)
     );
     /////////////////////////////////
-
-    // Clock generation
-    localparam CLK_PERIOD = 10ns;  // 100 MHz
-
-    initial clk = 0;
-    always #(CLK_PERIOD/2) clk = ~clk;
-
-    // Reset generation
-    initial begin
-        rst = 0;
-        #100;        // hold reset low for 100ns
-        rst = 1;
-    end
-
 
 
 endmodule
