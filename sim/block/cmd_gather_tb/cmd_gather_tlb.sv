@@ -26,6 +26,9 @@ module cmd_gather_tlb (
 	// ---> uart_rx
 	input logic         uart_rx_in,
 
+    input logic         baud_tick;
+    input logic         baud_half_tick;
+
 	// cmd_parser --->
 	output logic        cmd_fifo_wr_en,
 	output cmd_packet_t cmd_fifo_wr_data,
@@ -42,26 +45,6 @@ module cmd_gather_tlb (
     logic       byte_fifo_rd_en;
     logic [7:0] byte_fifo_data;
     logic       byte_fifo_valid;
-
-    /////////////////////////////////
-    ////////////// BAUD RATE GENERATOR
-    logic baud_tick;
-    logic baud_half_tick;
-
-    baud_tick_gen baud_tick1 (
-        .clk(clk),
-        .rst(rst),
-        .baud_rate(115200),
-        .baud_tick(baud_tick)
-    );
-
-    baud_tick_gen baud_tick2 (
-        .clk(clk),
-        .rst(rst),
-        .baud_rate(57600),
-        .baud_tick(baud_half_tick)
-    );
-    /////////////////////////////////
 
 
     /////////////////////////////////
