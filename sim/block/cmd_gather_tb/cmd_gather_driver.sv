@@ -7,10 +7,10 @@ class cmd_gather_driver extends uvm_driver;
     mailbox #(cmd_gather_transaction) seq_mb;
 
 
-    function new(virtual cmd_gather_if vif,  mailbox #(cmd_gather_transaction) seq_mb);
+    function new(virtual cmd_gather_if vif,  common_cfg cfg, mailbox #(cmd_gather_transaction) seq_mb);
         this.vif = vif;
         this.seq_mb = seq_mb;
-        cfg = new();
+        this.cfg = cfg;
     endfunction
 
 
