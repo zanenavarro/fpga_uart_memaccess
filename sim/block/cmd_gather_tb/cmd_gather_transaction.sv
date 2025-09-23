@@ -3,7 +3,7 @@
 class cmd_gather_transaction extend uvm_sequence_itm;
 
 
-    rand logic [1:0] cmd_type;  // e.g. 00=READ, 01=WRITE, 10=MODIFY
+    rand logic [7:0] cmd_type;  // e.g. 00=READ, 01=WRITE, 10=MODIFY
     rand logic [7:0] addr;
     rand logic [7:0] data;
 

@@ -26,6 +26,12 @@ module cmd_gather_top();
     
     // instantiate agent
 
+    cmd_gather_agent agent (
+        .clk(clk),
+        .rst(rst),
+        .cmd_gather_if(tb_if)
+    );
+
     
     // instantiate the DUT
     cmd_gather_tlb cmd_gather (
@@ -54,6 +60,9 @@ module cmd_gather_top();
         rst = 0;
         #100;        // hold reset low for 100ns
         rst = 1;
+
+        agent = new(tb_if);
+        agent.start();
     end
 
 
