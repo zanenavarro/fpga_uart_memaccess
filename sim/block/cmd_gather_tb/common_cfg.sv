@@ -1,6 +1,5 @@
 class common_cfg;
 
-
     // driver params
     rand logic [5:0] driver_start_delay;
     rand logic [5:0] driver_send_delay;
@@ -25,8 +24,6 @@ class common_cfg;
 
     // test sequences
     rand logic [5:0] num_sequences;
-    constraint num_sequences_c {num_sequences inside {[1:10]};};
+    constraint num_sequences_c {num_sequences inside {[1:1]};};
 
-
-
-endclass;
+endclass

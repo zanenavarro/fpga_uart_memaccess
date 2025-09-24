@@ -1,9 +1,9 @@
-import cmd_pkg::*;
 
 class cmd_gather_driver extends uvm_driver;
 
     virtual cmd_gather_if vif;
     common_cfg cfg;
+    cmd_gather_transaction cmd_trans;
     mailbox #(cmd_gather_transaction) seq_mb;
 
 
@@ -15,40 +15,45 @@ class cmd_gather_driver extends uvm_driver;
 
 
     task start();
+        int i;
+        $display("CMD_GATHER_DRIVER: Starting cmd_gather_driver...");
 
-        vif.uart_rx_in = 1'b1; // idle state
+        vif.uart_rx_in <= 1'b1; // idle state
         @(posedge vif.baud_tick);
-        #(cfg.driver_start_delay);
     
-
-        for (genvar i = 0; i < cfg.num_sequences; i++) begin
+        for (i = 0; i < cfg.num_sequences; i++) begin
             seq_mb.get(cmd_trans);
+            cmd_trans.print_fields();
+            @(posedge vif.baud_tick);
             drive_transaction(cmd_trans);
         end
 
     endtask;
 
     task drive_transaction(cmd_gather_transaction cmd_trans);
-
-        int i;
-        int j;
+        integer i;
+        integer j;
         logic [9:0] data_to_send;
 
+        $display("CMD_GATHER_DRIVER: Driving cmd_transaction:/n");
+        cmd_trans.print_fields();
 
+
+        // @(posedge vif.baud_tick);
         for (i=0; i<cfg.uart_num_of_byte; i++) begin
+        
 
             // first cmd_type, then cmd_addr, then cmd_data
-            data_to_send[7:0] = (i == 0) ? cmd_trans.cmd_type : ((i == 1) ? cmd_trans.cmd_addr : cmd_trans.cmd_data);
+            data_to_send[7:0] = (i == 0) ? cmd_trans.cmd_type : ((i == 1) ? cmd_trans.addr : cmd_trans.data);
             data_to_send[0] = 1'b0; // start bit
             data_to_send[9] = 1'b1; // stop bit
 
             for (j=0; j<cfg.uart_num_of_bits_tx;j++) begin
                 @(posedge vif.baud_tick);
-                vif.uart_rx_in = data_to_send[j];
+                vif.uart_rx_in <= data_to_send[j];
             end
             
-            vif.uart_rx_in = 1'b1; // idle state between bytes
-            #(cfg.driver_send_delay);
+            @(posedge vif.baud_tick);
         end 
     endtask
 

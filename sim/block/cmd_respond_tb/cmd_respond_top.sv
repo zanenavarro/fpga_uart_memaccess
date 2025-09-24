@@ -35,6 +35,9 @@ module uart_tx_top ();
         rst = 0;
         #100;        // hold reset low for 100ns
         rst = 1;
+        $display("Starting UART TX Top-level Simulation");
+
+
     end
 
 endmodule

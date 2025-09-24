@@ -26,12 +26,12 @@ module cmd_gather_tlb (
 	// ---> uart_rx
 	input logic         uart_rx_in,
 
-    input logic         baud_tick;
-    input logic         baud_half_tick;
+    input logic         baud_tick,
+    input logic         baud_half_tick,
 
 	// cmd_parser --->
 	output logic        cmd_fifo_wr_en,
-	output cmd_packet_t cmd_fifo_wr_data,
+	output cmd_packet_t cmd_fifo_wr_data
 );
 
 
@@ -103,19 +103,9 @@ module cmd_gather_tlb (
     );
     /////////////////////////////////
 
-
-
-    // Clock generation
-    localparam CLK_PERIOD = 10ns;  // 100 MHz
-
-    initial clk = 0;
-    always #(CLK_PERIOD/2) clk = ~clk;
-
-    // Reset generation
     initial begin
-        rst = 0;
-        #100;        // hold reset low for 100ns
-        rst = 1;
-    end
+        byte_fifo_data = 0;
+        byte_fifo_valid = 0;
+    end 
 
 endmodule

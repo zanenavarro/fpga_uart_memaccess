@@ -16,7 +16,7 @@ module cmd_gather_top();
     baud_tick_gen baud_tick2 (
         .clk(clk),
         .rst(rst),
-        .baud_rate(57600),
+        .baud_rate(230400),
         .baud_tick(tb_if.baud_half_tick)
     );
     /////////////////////////////////
@@ -25,12 +25,7 @@ module cmd_gather_top();
     cmd_gather_if tb_if(clk, rst);
     
     // instantiate agent
-
-    cmd_gather_agent agent (
-        .clk(clk),
-        .rst(rst),
-        .cmd_gather_if(tb_if)
-    );
+    cmd_gather_agent agent;
 
     
     // instantiate the DUT
@@ -57,9 +52,11 @@ module cmd_gather_top();
 
     // Reset generation
     initial begin
-        rst = 0;
-        #100;        // hold reset low for 100ns
         rst = 1;
+        #100;        // hold reset low for 100ns
+        rst = 0;
+        $display("Starting UART TX Top-level Simulation");
+
 
         agent = new(tb_if);
         agent.start();

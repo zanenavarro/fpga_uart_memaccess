@@ -35,6 +35,8 @@
 //   2025-06-28 - Initial version
 //
 //------------------------------------------------------------------------------
+     
+`timescale 1ns/1ps
 
 typedef enum logic [2:0] {
     RX_IDLE,       // Waiting for start bit (rx == 0)

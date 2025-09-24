@@ -24,13 +24,13 @@ class cmd_gather_scoreboard extends uvm_scoreboard;
 
                 if (mon_out_trans != golden_trans) begin
                     $error("cmd_gather_scoreboard: Mismatch: Expected: cmd_type=%0h, cmd_addr=%0h, cmd_data=%0h but RECEIVED: cmd_type=%0h, cmd_addr=%0h, cmd_data=%0h",
-                             golden_trans.cmd_type, golden_trans.cmd_addr, golden_trans.cmd_data,
-                             mon_out_trans.cmd_type, mon_out_trans.cmd_addr, mon_out_trans.cmd_data);
+                             golden_trans.cmd_type, golden_trans.addr, golden_trans.data,
+                             mon_out_trans.cmd_type, mon_out_trans.addr, mon_out_trans.data);
                 end
 
                 else begin
-                    $display("cmd_gather_scoreboard: Match: cmd_type=%0h, cmd_addr=%0h, cmd_data=%0h",
-                             mon_out_trans.cmd_type, mon_out_trans.cmd_addr, mon_out_trans.cmd_data);
+                    $display("cmd_gather_scoreboard: Match: cmd_type=%0h, addr=%0h, data=%0h",
+                             mon_out_trans.cmd_type, mon_out_trans.addr, mon_out_trans.data);
                 end
             end
         end

@@ -4,7 +4,7 @@
 
 # Add Verilog/SystemVerilog source files
 add_files [glob ./src/**/*.sv]
-add_files [glob ./sim/**/*.sv]
+add_files -fileset sim_1[glob ./sim/**/*.sv]
 
 # Add constraints
 # add_files ./constraints/latch_top.xdc

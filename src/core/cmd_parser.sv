@@ -15,7 +15,7 @@
 //
 //------------------------------------------------------------------------------
 
-import cmd_pkg::*;
+import cmd_pkg::cmd_packet_t;
 
 module cmd_parser (
     input  logic        clk,
@@ -49,7 +49,7 @@ always_ff @(posedge clk, posedge rst) begin
         if (byte_fifo_valid) begin
             case (byte_count)
                 2'b00: begin
-                    cmd_reg.cmd_type <= byte_fifo_data[1:0];
+                    cmd_reg.cmd_type[1:0] <= byte_fifo_data[1:0];
                 end
                 2'b01: begin
                     cmd_reg.addr <= byte_fifo_data;
