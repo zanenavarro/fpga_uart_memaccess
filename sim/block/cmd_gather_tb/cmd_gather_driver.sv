@@ -26,6 +26,8 @@ class cmd_gather_driver extends uvm_driver;
             cmd_trans.print_fields();
             @(posedge vif.baud_tick);
             drive_transaction(cmd_trans);
+            @(posedge vif.baud_tick);
+
         end
 
     endtask;
@@ -44,9 +46,11 @@ class cmd_gather_driver extends uvm_driver;
         
 
             // first cmd_type, then cmd_addr, then cmd_data
-            data_to_send[7:0] = (i == 0) ? cmd_trans.cmd_type : ((i == 1) ? cmd_trans.addr : cmd_trans.data);
+            data_to_send[8:1] = (i == 0) ? cmd_trans.cmd_type : ((i == 1) ? cmd_trans.addr : cmd_trans.data);
             data_to_send[0] = 1'b0; // start bit
             data_to_send[9] = 1'b1; // stop bit
+
+            $display("CMD_GATHER_DRIVER: Sending byte %0d: 0x%0h", i, data_to_send[8:1]);
 
             for (j=0; j<cfg.uart_num_of_bits_tx;j++) begin
                 @(posedge vif.baud_tick);

@@ -4,6 +4,7 @@ class cmd_gather_agent;
     cmd_gather_driver driver;
     cmd_gather_monitor monitor;
     cmd_gather_sequencer sequencer;
+    cmd_gather_scoreboard scoreboard;
     common_cfg cfg;
 
 
@@ -25,6 +26,8 @@ class cmd_gather_agent;
         driver = new(vif, cfg, seq_mb);
         monitor = new(vif, cfg, mon_out_mb);
         sequencer = new(cfg, seq_mb, golden_mb);
+        scoreboard = new(vif, cfg, golden_mb, mon_out_mb);
+
     endfunction
 
     task start();
@@ -32,8 +35,13 @@ class cmd_gather_agent;
         sequencer.start();
 
         #50;
-        driver.start();
-        monitor.start();
+
+        fork
+            driver.start();
+            monitor.start();  
+            scoreboard.start();  
+        join
+        
     endtask;
 
 endclass

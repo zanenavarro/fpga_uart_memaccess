@@ -24,6 +24,6 @@ class common_cfg;
 
     // test sequences
     rand logic [5:0] num_sequences;
-    constraint num_sequences_c {num_sequences inside {[1:1]};};
+    constraint num_sequences_c {num_sequences inside {[1:6]};};
 
 endclass
