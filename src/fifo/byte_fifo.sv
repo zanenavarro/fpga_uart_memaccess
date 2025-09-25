@@ -45,8 +45,8 @@ assign full = (count == DEPTH);
 assign empty = (count == 0);
 assign valid = !empty;
 assign rd_data = mem[rd_ptr];
-assign valid_write = (wr_data && !full && wr_en);
-assign valid_read = (rd_data && !empty && rd_en);
+assign valid_write = (!full && wr_en);
+assign valid_read = (!empty && rd_en);
 
 
 // write logic
