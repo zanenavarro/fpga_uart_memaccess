@@ -13,3 +13,4 @@ webtalk*
 *.vcd
 *.wdb
 */fpga_uart_dma/
+./cmd_gather_block/
