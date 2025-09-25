@@ -63,13 +63,13 @@ always_ff @(posedge clk, posedge rst) begin
                     cmd_fifo_wr_en <= 1;
                 end
             endcase
+
+            // handling byte_count
+            if (byte_count == 2)
+                byte_count <= 0;
+            else
+                byte_count <= byte_count + 1;
         end
-        
-        // handling byte_count
-        if (byte_count == 2)
-            byte_count <= 0;
-        else
-            byte_count <= byte_count + 1;
     end
 end
 
