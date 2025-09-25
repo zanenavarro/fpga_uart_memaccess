@@ -60,7 +60,7 @@ module uart_rx (
 
 rx_state_e rx_state;
 logic [7:0] sample_data;
-logic [2:0] bit_count;
+logic [3:0] bit_count;
 logic data_ready_r;
 
 assign data_ready = data_ready_r;
@@ -88,21 +88,7 @@ always_ff @(posedge clk, posedge rst) begin
                     bit_count <= bit_count + 1;
                 end
             end
-            
-            RX_STOP : begin
-                if (rx == 1) begin
-                    data_out <= sample_data;
-                    rx_state <= RX_DONE;
-                end else begin
-                    rx_state <= RX_IDLE; // framing error, reset
-                end
-            end
-            
-            
-            RX_DONE : begin
-                rx_state <= RX_IDLE;
-            end
-            
+                        
             default: rx_state <= RX_IDLE;
            
         endcase
@@ -126,6 +112,15 @@ always_ff @(posedge clk or posedge rst) begin
         data_ready_r <= 0;
     end else if (rx_state == RX_DONE) begin
         data_ready_r <= 1;
+        rx_state <= RX_IDLE;
+    end else if (rx_state == RX_STOP) begin
+        if (rx == 1) begin
+            rx_state <= RX_DONE;
+            data_out <= sample_data;
+        end else begin
+            rx_state <= RX_IDLE; // framing error, reset
+        end
+        
     end else begin
         data_ready_r <= 0;
     end
