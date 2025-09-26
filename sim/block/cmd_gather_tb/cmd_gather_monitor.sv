@@ -20,11 +20,13 @@ class cmd_gather_monitor extends uvm_monitor;
         forever begin
             @(posedge vif.cmd_fifo_wr_en);
             cmd_trans_out = new(); 
-            $display("CMD_GATHER_MONITOR: Detected cmd_transaction:/n");
+            $display("CMD_GATHER_MONITOR: Received cmd_transaction from DUT: cmd_type=%0h, addr=%0h, data=%0h",
+                     vif.cmd_fifo_wr_data.cmd_type,
+                     vif.cmd_fifo_wr_data.addr,
+                     vif.cmd_fifo_wr_data.data);
             cmd_trans_out.cmd_type = vif.cmd_fifo_wr_data.cmd_type;
             cmd_trans_out.addr = vif.cmd_fifo_wr_data.addr;
             cmd_trans_out.data = vif.cmd_fifo_wr_data.data;
-            cmd_trans_out.print_fields();
 
             mon_out_mb.put(cmd_trans_out); // add to mailbox for scoreboard
         end

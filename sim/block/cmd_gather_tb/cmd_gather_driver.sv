@@ -23,7 +23,6 @@ class cmd_gather_driver extends uvm_driver;
     
         for (i = 0; i < cfg.num_sequences; i++) begin
             seq_mb.get(cmd_trans);
-            cmd_trans.print_fields();
             @(posedge vif.baud_tick);
             drive_transaction(cmd_trans);
             @(posedge vif.baud_tick);
@@ -37,8 +36,10 @@ class cmd_gather_driver extends uvm_driver;
         integer j;
         logic [9:0] data_to_send;
 
-        $display("CMD_GATHER_DRIVER: Driving cmd_transaction:/n");
-        cmd_trans.print_fields();
+        $display("CMD_GATHER_DRIVER: Driving cmd_transaction into DUT: cmd_type=%0h, addr=%0h, data=%0h",
+            cmd_trans.cmd_type,
+            cmd_trans.addr,
+            cmd_trans.data);
 
 
         // @(posedge vif.baud_tick);

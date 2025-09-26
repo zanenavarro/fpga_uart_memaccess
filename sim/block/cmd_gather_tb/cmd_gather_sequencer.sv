@@ -18,10 +18,12 @@ class cmd_gather_sequencer extends uvm_sequencer;
         $display("CMD_GATHER_SEQUENCER: Starting cmd_gather_sequencer...");
         for (i=0; i<cfg.num_sequences; i++) begin
             cmd_trans = new();
-            
-            $display("CMD_GATHER_SEQUENCER: Generating cmd_transaction:/n");
             cmd_trans.randomize();
-            cmd_trans.print_fields();
+
+            $display("CMD_GATHER_SEQUENCER: Generating cmd_transaction: cmd_type=%0h, addr=%0h, data=%0h",
+                     cmd_trans.cmd_type,
+                     cmd_trans.addr,
+                     cmd_trans.data);
 
             seq_mb.put(cmd_trans);
             golden_mb.put(cmd_trans);
