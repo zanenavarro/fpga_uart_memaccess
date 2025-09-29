@@ -71,12 +71,13 @@ always_ff @(posedge clk, posedge rst) begin
         cmd_rd_en      <= 0;
         mem_write_en   <= 0;
         mem_read_en    <= 0;
-        data_out_tx.data    <= 0;
         out_tx_en      <= 0;
         
 
         case (cmd_state)
             IDLE: begin
+                data_out_tx <= '0;
+
                 if (cmd_valid) begin
                     cmd_rd_en <= 1;
                     cmd_state <= FIFO_COLLECT;
