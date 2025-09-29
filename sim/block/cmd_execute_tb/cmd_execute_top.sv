@@ -1,4 +1,4 @@
-module cmd_execute_tb ();
+module cmd_execute_top ();
 
     // Clock and reset signals
     logic clk;
@@ -8,6 +8,8 @@ module cmd_execute_tb ();
     cmd_execute_if tb_if(clk, rst);
 
     // instantiate agent
+    cmd_execute_agent agent;
+
 
     
     // instantiate the DUT
@@ -33,9 +35,22 @@ module cmd_execute_tb ();
 
     // Reset generation
     initial begin
-        rst = 0;
-        #100;        // hold reset low for 100ns
         rst = 1;
+        #100;        // hold reset high
+        rst = 0;
+        agent = new(tb_if);
+        agent.reg_init();
+        backdoor_reg(agent);
+
+        #(350);
+
+        agent.start();
     end
+
+
+    task backdoor_reg(cmd_execute_agent agent);
+        integer i;
+        foreach (cmd_execute_tlb.register_bank.regs[i]) cmd_execute_tlb.register_bank.regs[i] = agent.mem[i];
+    endtask
 
 endmodule

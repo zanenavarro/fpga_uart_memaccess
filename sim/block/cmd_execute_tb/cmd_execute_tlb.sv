@@ -30,7 +30,7 @@
 
 import cmd_pkg::*;
 
-module cmd_execute_tb(
+module cmd_execute_tlb(
     input logic         clk,
     input logic         rst,
 
@@ -42,8 +42,7 @@ module cmd_execute_tb(
 
     // cmd_dispatcher --->
     output cmd_packet_t cmd_resp_wr_data,
-    output logic        cmd_resp_wr_en;
-
+    output logic        cmd_resp_wr_en
 );
 
  

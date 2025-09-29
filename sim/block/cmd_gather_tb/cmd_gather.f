@@ -1,24 +1,15 @@
-// ./src/common/cmd_pkg.sv
+// bringing in relevant packages
+./src/common/cmd_pkg.sv
 
-// +incdir+./src/core
-./src/uart/uart_rx.sv
-./src/fifo/byte_fifo.sv
-./src/core/cmd_parser.sv
-./src/uart/baud_tick_gen.sv
+// bringing in rtl
+./src/block/cmd_gather.f
 
-// +incdir+./src/fifo
-// +incdir+./src/uart
+// insert uvm base files
+./sim/common/uvm/uvm_lite_top.sv
 
+
+// testbench files
 ./sim/block/cmd_gather_tb/cmd_gather_tlb.sv
-
-
-./sim/common/uvm/uvm_component.sv
-./sim/common/uvm/uvm_driver.sv
-./sim/common/uvm/uvm_monitor.sv
-./sim/common/uvm/uvm_sequencer.sv
-./sim/common/uvm/uvm_sequence_item.sv
-
-
 ./sim/block/cmd_gather_tb/common_cfg.sv
 ./sim/block/cmd_gather_tb/cmd_gather_interface.sv
 ./sim/block/cmd_gather_tb/cmd_gather_transaction.sv
