@@ -50,6 +50,7 @@ module uart_tx (
     input cmd_packet_t cmd_rsp,
     input logic data_ready,
     output logic data_read_en,
+    output logic tx_en,
     output logic tx
 );
 
@@ -62,55 +63,20 @@ logic [29:0] shift_reg;
 
 always_ff @(posedge clk, posedge rst) begin
     if (rst) begin
-        tx_state    <= TX_IDLE;
-        bit_count   <= 0;
-        shift_reg   <= 0;
-        tx          <= 0;
+        tx_state     <= TX_IDLE;
+        bit_count    <= 0;
+        shift_reg    <= 0;
+        tx           <= 1;
+        tx_en        <= 0;
+        current_cmd_rsp <= '0;
     end else if (baud_tick) begin
         tx           <= 1;
         data_read_en <= 0;
-        case (tx_state)
-            TX_IDLE: begin
-                if (data_ready == 1) begin
-                    tx_state     <= TX_READ;
-                end
-            end
-            
-            
-            TX_READ: begin
-                data_read_en <= 1;
-                tx_state     <= TX_READ_DELAY;
-            end
-            
-            TX_READ_DELAY: begin
-                tx_state <= TX_READ_FIFO_COLLECT;
-            end
-            
-            TX_READ_FIFO_COLLECT: begin
-                shift_reg <= {
-                    // Byte 3: Data
-                    1'b1,                                     // Stop bit
-                    cmd_rsp.data,                             // 8 bits (MSB first here)
-                    1'b0,                                     // Start bit
-                
-                    // Byte 2: Addr
-                    1'b1,
-                    cmd_rsp.addr,
-                    1'b0,
-                
-                    // Byte 1: Cmd Type
-                    1'b1,
-                    6'd0,
-                    cmd_rsp.cmd_type,
-                    1'b0
-                };
-                tx        <= 0;
-                tx_state  <= TX_DATA;
-            end
-            
+        case (tx_state)            
             TX_DATA : begin
                 // begin transmitting actual data
                 tx <= shift_reg[0];
+                tx_en <= 1;
                 shift_reg <= shift_reg >> 1;
                 bit_count <= bit_count + 1;
                 
@@ -121,15 +87,67 @@ always_ff @(posedge clk, posedge rst) begin
             TX_STOP : begin
                 tx       <= 1;
                 tx_state <= TX_DONE;
+                shift_reg <= '0;
+                bit_count <= '0;
+            end
+                        
+            default: tx_state <= TX_IDLE;
+           
+        endcase
+    end
+end
+
+
+always_ff @(posedge clk, posedge rst) begin
+
+
+
+    if (rst) begin
+    end else begin
+        
+        data_read_en <= 0;
+        
+        case (tx_state)            
+
+            TX_IDLE: begin
+                if (data_ready == 1) begin
+                    tx_state     <= TX_READ;
+                end
+                tx_en <= 0;
             end
             
-            
+            TX_READ: begin
+                data_read_en <= 1;
+                tx_state     <= TX_READ_FIFO_COLLECT;
+                current_cmd_rsp <= cmd_rsp;
+
+            end
+
+            TX_READ_FIFO_COLLECT: begin
+                shift_reg <= {
+                    // Byte 3: Data
+                    1'b1,                                     // Stop bit
+                    current_cmd_rsp.data,                             // 8 bits (MSB first here)
+                    1'b0,                                     // Start bit
+                
+                    // Byte 2: Addr
+                    1'b1,
+                    current_cmd_rsp.addr,
+                    1'b0,
+                
+                    // Byte 1: Cmd Type
+                    1'b1,
+                    current_cmd_rsp.cmd_type,
+                    1'b0
+                };
+                // tx        <= 0;
+                tx_state  <= TX_DATA;
+            end
+
+
             TX_DONE : begin
                 tx_state <= TX_IDLE;
             end
-            
-            default: tx_state <= TX_IDLE;
-           
         endcase
     end
 end
