@@ -1,4 +1,4 @@
-module uart_tx_tlb (
+module cmd_respond_tlb (
 
     // Clock and reset signals
     input logic clk,
@@ -8,8 +8,10 @@ module uart_tx_tlb (
     input cmd_packet_t cmd_fifo_rd_data,
     input logic        cmd_fifo_rd_en,
     input logic        cmd_fifo_valid,
+    input logic        baud_tick,
 
     // uart_tx --->
+    output logic tx_data_en,
     output logic tx_data
 );
     
@@ -113,22 +115,9 @@ module uart_tx_tlb (
         .data_read_en(resp_fifo_rd_en),
 
         // output
-        .tx(tx_data)
+        .tx(tx_data),
+        .tx_en(tx_data_en)
     );
     /////////////////////////////////
-
-
-    /////////////////////////////////
-    ////////////// BAUD RATE GENERATOR
-    logic baud_tick;
-
-    baud_tick_gen baud_tick1 (
-        .clk(clk),
-        .rst(rst),
-        .baud_rate(115200),
-        .baud_tick(baud_tick)
-    );
-    /////////////////////////////////
-
 
 endmodule

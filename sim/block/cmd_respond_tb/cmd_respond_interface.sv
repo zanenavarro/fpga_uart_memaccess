@@ -23,12 +23,15 @@
 
 import cmd_pkg::*;
 
-interface uart_tx_if (input logic clk, input logic rst_n);
+interface cmd_respond_if (input logic clk, input logic rst_n);
 
     cmd_packet_t cmd_fifo_rd_data;
     logic        cmd_fifo_rd_en;
     logic        cmd_fifo_valid;
+    
+    logic        baud_tick;
 
-    logic tx_data;
+    logic        tx_data_en;
+    logic        tx_data;
 
 endinterface
