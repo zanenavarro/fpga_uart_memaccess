@@ -86,6 +86,7 @@ always_ff @(posedge clk, posedge rst) begin
             
             TX_STOP : begin
                 tx       <= 1;
+                tx_en    <= 0;
                 tx_state <= TX_DONE;
                 shift_reg <= '0;
                 bit_count <= '0;
@@ -94,15 +95,6 @@ always_ff @(posedge clk, posedge rst) begin
             default: tx_state <= TX_IDLE;
            
         endcase
-    end
-end
-
-
-always_ff @(posedge clk, posedge rst) begin
-
-
-
-    if (rst) begin
     end else begin
         
         data_read_en <= 0;
@@ -151,6 +143,5 @@ always_ff @(posedge clk, posedge rst) begin
         endcase
     end
 end
-
 
 endmodule
