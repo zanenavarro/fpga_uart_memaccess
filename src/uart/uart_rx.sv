@@ -54,7 +54,10 @@ module uart_rx (
     input logic baud_tick,
     input logic baud_half_tick,
     output logic [7:0] data_out,
-    output logic data_ready
+    output logic data_ready,
+    output logic rx_idle,
+    output logic rx_start,
+    output logic rx_data
 );
 
 
@@ -70,15 +73,21 @@ always_ff @(posedge clk, posedge rst) begin
         rx_state <= RX_IDLE;
         sample_data <= 8'b0;
         bit_count <= 0;
+        rx_idle <= 0;
+        rx_data <= 0;
+        rx_start <= 0;
         data_out <= 8'b0;
+        data_ready_r <= 0;
     end else if (baud_tick) begin
         case (rx_state)
             RX_IDLE: begin
+                rx_idle <= 1;
                 if (rx == 0)
                     rx_state <= RX_START;
             end
             
             RX_DATA : begin
+                rx_data <= 1;
                 // begin sampling actual data
                 if (bit_count == 8) begin
                     rx_state <= RX_STOP;
@@ -93,6 +102,7 @@ always_ff @(posedge clk, posedge rst) begin
            
         endcase
     end else if (baud_half_tick) begin
+
         case (rx_state)
             RX_START: begin
                 // make sure that rx_state is still low mid sample of START
@@ -100,16 +110,10 @@ always_ff @(posedge clk, posedge rst) begin
                     rx_state <= RX_DATA;
                     sample_data <= 8'b0;
                     bit_count <= 0;
+                    rx_start <= 1;
                 end
             end
         endcase
-    end
-end
-
-// handling data_ready
-always_ff @(posedge clk or posedge rst) begin
-    if (rst) begin
-        data_ready_r <= 0;
     end else if (rx_state == RX_DONE) begin
         data_ready_r <= 1;
         rx_state <= RX_IDLE;
@@ -120,7 +124,6 @@ always_ff @(posedge clk or posedge rst) begin
         end else begin
             rx_state <= RX_IDLE; // framing error, reset
         end
-        
     end else begin
         data_ready_r <= 0;
     end
