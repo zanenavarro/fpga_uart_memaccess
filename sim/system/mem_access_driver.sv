@@ -1,13 +1,13 @@
 
-class reg_access_driver extends uvm_driver;
+class mem_access_driver extends uvm_driver;
 
-    virtual reg_access_if vif;
+    virtual mem_access_if vif;
     common_cfg cfg;
-    reg_access_transaction cmd_trans;
-    mailbox #(reg_access_transaction) seq_mb;
+    mem_access_transaction cmd_trans;
+    mailbox #(mem_access_transaction) seq_mb;
 
 
-    function new(virtual reg_access_if vif,  common_cfg cfg, mailbox #(reg_access_transaction) seq_mb);
+    function new(virtual mem_access_if vif,  common_cfg cfg, mailbox #(mem_access_transaction) seq_mb);
         this.vif = vif;
         this.seq_mb = seq_mb;
         this.cfg = cfg;
@@ -16,7 +16,7 @@ class reg_access_driver extends uvm_driver;
 
     task start();
         int i;
-        $display("reg_access_DRIVER: Starting reg_access_driver...");
+        $display("MEM_ACCESS_DRIVER: Starting mem_access_driver...");
 
         vif.rx <= 1'b1; // idle state
         @(posedge vif.baud_tick);
@@ -31,12 +31,12 @@ class reg_access_driver extends uvm_driver;
 
     endtask;
 
-    task drive_transaction(reg_access_transaction cmd_trans);
+    task drive_transaction(mem_access_transaction cmd_trans);
         integer i;
         integer j;
         logic [9:0] data_to_send;
 
-        $display("reg_access_DRIVER: Driving cmd_transaction into DUT: cmd_type=%0h, addr=%0h, data=%0h",
+        $display("MEM_ACCESS_DRIVER: Driving cmd_transaction into DUT: cmd_type=%0h, addr=%0h, data=%0h",
             cmd_trans.cmd_type,
             cmd_trans.addr,
             cmd_trans.data);
@@ -51,7 +51,7 @@ class reg_access_driver extends uvm_driver;
             data_to_send[0] = 1'b0; // start bit
             data_to_send[9] = 1'b1; // stop bit
 
-            $display("reg_access_DRIVER: Sending byte %0d: 0x%0h", i, data_to_send[8:1]);
+            $display("MEM_ACCESS_DRIVER: Sending byte %0d: 0x%0h", i, data_to_send[8:1]);
 
             for (j=0; j<cfg.uart_num_of_bits_tx;j++) begin
                 @(posedge vif.baud_tick);

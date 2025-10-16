@@ -1,13 +1,13 @@
 
-class reg_access_monitor extends uvm_monitor;
+class mem_access_monitor extends uvm_monitor;
 
-    virtual reg_access_if vif;
-    mailbox #(reg_access_transaction) mon_out_mb;
+    virtual mem_access_if vif;
+    mailbox #(mem_access_transaction) mon_out_mb;
 
     common_cfg cfg;
 
 
-    function new(virtual reg_access_if vif, common_cfg cfg, mailbox #(reg_access_transaction) mon_out_mb);
+    function new(virtual mem_access_if vif, common_cfg cfg, mailbox #(mem_access_transaction) mon_out_mb);
         this.vif = vif;
         this.mon_out_mb = mon_out_mb;
         this.cfg = cfg;
@@ -18,8 +18,8 @@ class reg_access_monitor extends uvm_monitor;
         logic [29:0] full_uart_tx;
         integer num_sequences;
 
-        reg_access_transaction cmd_trans_out;
-        $display("REG_ACCESS_MONITOR: Starting reg_access_monitor...");
+        mem_access_transaction cmd_trans_out;
+        $display("MEM_ACCESS_MONITOR: Starting mem_access_monitor...");
 
         bit_count = 0;
         full_uart_tx = '0;
@@ -43,9 +43,9 @@ class reg_access_monitor extends uvm_monitor;
 
                         // checks on start bits
                         if (full_uart_tx[0] == 0 && full_uart_tx[10] == 0 & full_uart_tx[20] == 0) begin
-                            $display("REG_ACCESS_MONITOR: START BITS ARE CORRECT.");
+                            $display("MEM_ACCESS_MONITOR: START BITS ARE CORRECT.");
                         end else begin
-                            $display("REG_ACCESS_MONITOR ERROR: START BITS ARE NOT CORRECT. cmd_type_start=%0h addr_start=%0h data_start=%0h",
+                            $display("MEM_ACCESS_MONITOR ERROR: START BITS ARE NOT CORRECT. cmd_type_start=%0h addr_start=%0h data_start=%0h",
                                 full_uart_tx[0],
                                 full_uart_tx[10],
                                 full_uart_tx[20]);
@@ -53,9 +53,9 @@ class reg_access_monitor extends uvm_monitor;
 
                         // checks on stop bits
                         if (full_uart_tx[9] == 1 && full_uart_tx[19] == 1 & full_uart_tx[29] == 1) begin
-                            $display("REG_ACCESS_MONITOR: STOP BITS ARE CORRECT.");
+                            $display("MEM_ACCESS_MONITOR: STOP BITS ARE CORRECT.");
                         end else begin
-                            $display("REG_ACCESS_MONITOR ERROR: STOP BITS ARE NOT CORRECT.");
+                            $display("MEM_ACCESS_MONITOR ERROR: STOP BITS ARE NOT CORRECT.");
                         end
 
                         cmd_trans_out = new();
@@ -64,7 +64,7 @@ class reg_access_monitor extends uvm_monitor;
                         cmd_trans_out.addr = full_uart_tx[18:11];
                         cmd_trans_out.data = full_uart_tx[28:21];
 
-                        $display("REG_ACCESS_MONITOR: Received cmd_transaction from DUT: cmd_type=%0h, addr=%0h, data=%0h",
+                        $display("MEM_ACCESS_MONITOR: Received cmd_transaction from DUT: cmd_type=%0h, addr=%0h, data=%0h",
                             cmd_trans_out.cmd_type,
                             cmd_trans_out.addr,
                             cmd_trans_out.data);

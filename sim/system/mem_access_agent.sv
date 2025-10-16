@@ -1,22 +1,22 @@
-class reg_access_agent;
+class mem_access_agent;
 
     common_cfg  cfg;
-    virtual reg_access_if vif;
-    reg_access_driver driver;
-    reg_access_monitor monitor;
-    reg_access_sequencer sequencer;
-    reg_access_scoreboard scoreboard;
+    virtual mem_access_if vif;
+    mem_access_driver driver;
+    mem_access_monitor monitor;
+    mem_access_sequencer sequencer;
+    mem_access_scoreboard scoreboard;
 
     logic [7:0] mem [0:255] ; // simple memory model for scoreboard comparison
 
     // mailbox declarations
-    mailbox #(reg_access_transaction) seq_mb;
-    mailbox #(reg_access_transaction) golden_mb;
-    mailbox #(reg_access_transaction) mon_out_mb;
+    mailbox #(mem_access_transaction) seq_mb;
+    mailbox #(mem_access_transaction) golden_mb;
+    mailbox #(mem_access_transaction) mon_out_mb;
 
 
 
-    function new(virtual reg_access_if vif);
+    function new(virtual mem_access_if vif);
         cfg = new();
         cfg.randomize();
         this.vif = vif;
@@ -35,7 +35,7 @@ class reg_access_agent;
 
 
     task start();
-        $display("REG_ACCESS_AGENT: Starting cmd_gather_agent...");
+        $display("mem_access_AGENT: Starting cmd_gather_agent...");
         sequencer = new(cfg, seq_mb, golden_mb, mem);
         sequencer.start();
         #50;

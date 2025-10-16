@@ -1,19 +1,19 @@
-module reg_access_top();
+module mem_access_top();
 
     logic clk;
     logic rst;
 
 
     // instantiate interface
-    reg_access_if tb_if(clk, rst);
+    mem_access_if tb_if(clk, rst);
 
     // instantiate agent
 
-    reg_access_agent agent;
+    mem_access_agent agent;
 
 
     // instantiate top level block
-    reg_access_tlb reg_access (
+    mem_access_tlb mem_access (
         .clk(clk),
         .rst(rst),
         .tx(tb_if.tx),
@@ -58,14 +58,14 @@ module reg_access_top();
 
         agent.start();
 
-        $display("Starting CMD_RESPOND Top-level Simulation");
+        $display("Starting MEM_ACCESS Top-level Simulation");
 
     end
 
 
-    task backdoor_reg(reg_access_agent agent);
+    task backdoor_reg(mem_access_agent agent);
         integer i;
-        foreach (reg_access.reg_bank.regs[i]) reg_access.reg_bank.regs[i] = agent.mem[i];
+        foreach (mem_access.ram.regs[i]) mem_access.ram.regs[i] = agent.mem[i];
     endtask
 
 

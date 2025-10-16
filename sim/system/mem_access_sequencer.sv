@@ -1,14 +1,14 @@
-class reg_access_sequencer extends uvm_sequencer;
+class mem_access_sequencer extends uvm_sequencer;
 
     common_cfg cfg;
-    reg_access_transaction cmd_trans;
+    mem_access_transaction cmd_trans;
 
-    mailbox #(reg_access_transaction) seq_mb;
-    mailbox #(reg_access_transaction) golden_mb;
+    mailbox #(mem_access_transaction) seq_mb;
+    mailbox #(mem_access_transaction) golden_mb;
     logic [7:0] mem [0:255];
 
 
-    function new(common_cfg cfg, mailbox #(reg_access_transaction) seq_mb, mailbox #(reg_access_transaction) golden_mb, logic [7:0] mem [0:255], string name="cmd_gather_sequencer");
+    function new(common_cfg cfg, mailbox #(mem_access_transaction) seq_mb, mailbox #(mem_access_transaction) golden_mb, logic [7:0] mem [0:255], string name="cmd_gather_sequencer");
         this.cfg = cfg;
         this.seq_mb = seq_mb;
         this.golden_mb = golden_mb;
@@ -18,12 +18,12 @@ class reg_access_sequencer extends uvm_sequencer;
 
     task start();
         int i;
-        $display("REG_ACCESS_SEQUENCER: Starting reg_access_sequencer...");
+        $display("MEM_ACCESS_SEQUENCER: Starting mem_access_sequencer...");
         for (i=0; i<cfg.num_sequences; i++) begin
             cmd_trans = new();
             cmd_trans.randomize();
 
-            $display("REG_ACCESS_SEQUENCER: Generating cmd_transaction: cmd_type=%0h, addr=%0h, data=%0h",
+            $display("MEM_ACCESS_SEQUENCER: Generating cmd_transaction: cmd_type=%0h, addr=%0h, data=%0h",
                      cmd_trans.cmd_type,
                      cmd_trans.addr,
                      cmd_trans.data);
@@ -35,7 +35,7 @@ class reg_access_sequencer extends uvm_sequencer;
     endtask;
 
 
-    task add_to_golden_mb(reg_access_transaction cmd_trans);
+    task add_to_golden_mb(mem_access_transaction cmd_trans);
 
         case (cmd_trans.cmd_type)
             
@@ -59,7 +59,7 @@ class reg_access_sequencer extends uvm_sequencer;
         endcase
 
         golden_mb.put(cmd_trans);
-        $display("CMD_GATHER_SEQUENCER: Adding to GOLDEN_MODEL: cmd_type=%0h, addr=%0h, data=%0h",
+        $display("MEM_ACCESS_SEQUENCER: Adding to GOLDEN_MODEL: cmd_type=%0h, addr=%0h, data=%0h",
             cmd_trans.cmd_type,
             cmd_trans.addr,
             cmd_trans.data);

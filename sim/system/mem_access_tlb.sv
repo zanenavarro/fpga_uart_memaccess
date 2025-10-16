@@ -42,7 +42,7 @@
 //
 //------------------------------------------------------------------------------
 import cmd_pkg::*;
-module reg_access_tlb(
+module mem_access_tlb(
     input logic clk,
     input logic rst,
     
@@ -193,7 +193,7 @@ module reg_access_tlb(
         .out_tx_en(resp_fifo_wr_en)
     );
 
-    register_bank reg_bank(
+    ram ram(
         //input
         .clk(clk),
         .addr(reg_addr),
