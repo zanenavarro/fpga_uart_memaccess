@@ -13,4 +13,8 @@ webtalk*
 *.vcd
 *.wdb
 */fpga_uart_dma/
-./cmd_gather_block/
+cmd_gather_block/
+cmd_execute_block/
+cmd_respond_block/
+reg_access_top/
+
