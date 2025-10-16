@@ -22,7 +22,7 @@
 //------------------------------------------------------------------------------
 
 
-module register_bank (
+module ram (
     input logic clk,
     input logic write_en,
     input logic read_strobe,
@@ -32,18 +32,18 @@ module register_bank (
 );
 
 
-    logic [7:0] regs [0:255]; //make this parameterized
+    logic [7:0] ram [0:255]; //make this parameterized
     
     // write : synchronous
     always_ff @(posedge clk) begin
         if (write_en) 
-            regs[addr] <= write_data;
+            ram[addr] <= write_data;
     end
     
     // read: latch on read_strobe
     always_ff @(posedge clk) begin
         if (read_strobe)
-            read_data <= regs[addr];
+            read_data <= ram[addr];
     end
 
 endmodule

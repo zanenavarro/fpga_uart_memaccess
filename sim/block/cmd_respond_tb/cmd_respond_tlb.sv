@@ -65,7 +65,7 @@ module cmd_respond_tlb (
     /////////////////////////////////
     ///////////////////// REGISTER
 
-    register_bank register_bank(
+    ram ram(
         //input
         .clk(clk),
         .write_en(reg_write_en),

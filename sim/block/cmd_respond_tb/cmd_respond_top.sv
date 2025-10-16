@@ -66,7 +66,7 @@ module cmd_respond_top ();
 
     task backdoor_reg(cmd_respond_agent agent);
         integer i;
-        foreach (cmd_respond.register_bank.regs[i]) cmd_respond.register_bank.regs[i] = agent.mem[i];
+        foreach (cmd_respond.ram.regs[i]) cmd_respond.ram.regs[i] = agent.mem[i];
     endtask
 
 

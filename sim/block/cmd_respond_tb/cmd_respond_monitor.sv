@@ -32,6 +32,12 @@ class cmd_respond_monitor extends uvm_monitor;
 
             if (num_sequences != cfg.num_sequences) begin
                             // sample complete, add to mailbox
+
+                // shift into tx
+                full_uart_tx = {vif.tx_data, full_uart_tx[29:1]};
+                bit_count = bit_count + 1;
+
+
                 if (bit_count == 30) begin
 
                     // checks on start bits
@@ -67,10 +73,6 @@ class cmd_respond_monitor extends uvm_monitor;
                     bit_count = 0;
                     num_sequences = num_sequences + 1;
 
-                end else begin
-                    // shift into tx
-                    full_uart_tx = {vif.tx_data, full_uart_tx[29:1]};
-                    bit_count = bit_count + 1;
                 end
 
             end else begin
