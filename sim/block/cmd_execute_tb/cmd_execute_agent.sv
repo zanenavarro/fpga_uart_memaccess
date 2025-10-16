@@ -51,38 +51,6 @@ class cmd_execute_agent;
     task populate_mem();
         foreach (mem[i]) mem[i] = $urandom_range(0,255);
     endtask 
-        
-    // task populate_mem();
-    //     logic [7:0] length_of_mem;
-    //     integer i;
-    //     reg_access_entry reg_entry;
-
-    //     length_of_mem = 256;
-    //     for(i=0; i < length_of_mem; i++) begin
-
-    //         reg_entry = new();
-    //         reg_entry.randomize();
-    //         $display("CMD_EXECUTE_AGENT: populating index=%d /w data=%b...", i, reg_entry.data);
-
-    //         this.mem[i] = reg_entry.data;
-    //     end
-
-    // endtask
-
-    task backdoor_reg();
-        // use randomly populated mem to populate register bank
-        integer reg_addr;
-
-        for (reg_addr = 0; reg_addr < 256; reg_addr ++) begin
-            @(posedge vif.clk);
-            vif.reg_addr = reg_addr;
-            vif.reg_write_en = 1;
-            vif.reg_write_data = mem[reg_addr];
-        end
-
-        vif.reg_write_en = 0;
-
-    endtask
 
     task reg_init();
         populate_mem();

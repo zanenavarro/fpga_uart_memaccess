@@ -14,9 +14,4 @@ class cmd_gather_transaction extends uvm_sequence_itm;
         $display("CMD_GATHER_TRANSACTION: ", $sformatf("CMD_TYPE: %0d, ADDR: 0x%0h, DATA: 0x%0h", cmd_type, addr, data));
     endfunction
 
-    // function print_string();
-    //     $display(uvm_report_info, "CMD_GATHER_TRANSACTION", $sformatf("CMD_TYPE: %0d, ADDR: 0x%0h, DATA: 0x%0h", cmd_type, addr, data));
-    // endfunction
-
-
 endclass

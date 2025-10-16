@@ -1,41 +1,21 @@
-# TCL script to build cmd_respond from source
-# ---------------------------------------------------------------------------
-# Build script for cmd_respond block only
-# ---------------------------------------------------------------------------
-
-# Create a *separate* project for block-level work
-# create_project cmd_respond_block cmd_respond_block -part xc7a100tcsg324-1 -force
-
-# ---------------------- RTL ----------------------
-# Add only RTL needed for cmd_respond
-# (Adjust the glob if cmd_respond depends on other submodules)
-# add_files -fileset sources_1 [glob ./src/**/*.sv]
-
-# ---------------------- Simulation ----------------------
-# Add block-level simulation files only
-
-# In your build_cmd_respond.tcl
-# add_files -fileset sim_1 [glob ./src/common/cmd_pkg.sv]
-# add_files -fileset sources_1 [glob ./src/common/cmd_pkg.sv]
-
-
-##########################
 # ===============================================================
 # TCL script to add files for cmd_respond block simulation
-# Explicit compile order
 # ===============================================================
+
+# Create a *separate* project for block-level work
+# create_project cmd_respond_block cmd_respond_block -part xc7a50ticsg324-1L -force
 
 # Clear previous sources
 reset_project
 
-# Add testbench sources
-# Add testbench sources
 
+# ---------------------- RTL ----------------------
+# Add only RTL needed for cmd_respond
 add_files -fileset sim_1 ./src/common/cmd_pkg.sv
 
 add_files -fileset sim_1 ./src/uart/uart_tx.sv
 add_files -fileset sim_1 ./src/fifo/resp_fifo.sv
-add_files -fileset sim_1 ./src/core/register_bank.sv
+add_files -fileset sim_1 ./src/core/ram.sv
 add_files -fileset sim_1 ./src/core/cmd_dispatcher.sv
 add_files -fileset sim_1 ./src/uart/baud_tick_gen.sv
 
@@ -47,7 +27,8 @@ add_files -fileset sim_1 ./sim/common/uvm/uvm_sequencer.sv
 add_files -fileset sim_1 ./sim/common/uvm/uvm_sequence_itm.sv
 add_files -fileset sim_1 ./sim/common/uvm/uvm_scoreboard.sv
 
-
+# ---------------------- Simulation ----------------------
+# Add block-level simulation files only
 add_files -fileset sim_1 ./sim/common/register/reg_access_entry.sv
 add_files -fileset sim_1 ./sim/block/cmd_respond_tb/cmd_respond_tlb.sv
 add_files -fileset sim_1 ./sim/block/cmd_respond_tb/common_cfg.sv
@@ -60,16 +41,17 @@ add_files -fileset sim_1 ./sim/block/cmd_respond_tb/cmd_respond_scoreboard.sv
 add_files -fileset sim_1 ./sim/block/cmd_respond_tb/cmd_respond_agent.sv
 add_files -fileset sim_1 ./sim/block/cmd_respond_tb/cmd_respond_top.sv
 
-
+# ---------------------- RTL ----------------------
+# Add only RTL needed for cmd_respond
 add_files -fileset sources_1 ./src/common/cmd_pkg.sv
-
 add_files -fileset sources_1 ./src/uart/uart_tx.sv
 add_files -fileset sources_1 ./src/fifo/resp_fifo.sv
-add_files -fileset sources_1 ./src/core/register_bank.sv
+add_files -fileset sources_1 ./src/core/ram.sv
 add_files -fileset sources_1 ./src/core/cmd_dispatcher.sv
 add_files -fileset sources_1 ./src/uart/baud_tick_gen.sv
 
-
+# ---------------------- Simulation ----------------------
+# Add block-level simulation files only
 add_files -fileset sources_1 ./sim/common/uvm/uvm_component.sv
 add_files -fileset sources_1 ./sim/common/uvm/uvm_driver.sv
 add_files -fileset sources_1 ./sim/common/uvm/uvm_monitor.sv
@@ -102,10 +84,5 @@ puts "TCL project setup for cmd_respond block complete."
 
 
 # Uncomment if you want Vivado to launch a run or simulation
-# launch_runs synth_1
-move_files [get_files  C:/Users/zane/projects/fpga/uart_memaccess/sim/block/cmd_respond_tb/cmd_respond_tlb.sv]
-set_property top cmd_respond_tlb [current_fileset]
-export_ip_user_files -of_objects  [get_files C:/Users/zane/projects/fpga/uart_memaccess/sim/block/cmd_respond_tb/cmd_respond.f] -no_script -reset -force -quiet
-# remove_files  C:/Users/zane/projects/fpga/uart_memaccess/sim/block/cmd_respond_tb/cmd_respond.f
 # launch_simulation
 

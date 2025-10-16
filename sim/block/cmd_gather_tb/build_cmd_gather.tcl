@@ -1,36 +1,78 @@
-# TCL script to build cmd_gather from source
-# ---------------------------------------------------------------------------
-# Build script for cmd_gather block only
-# ---------------------------------------------------------------------------
-
-# Create a *separate* project for block-level work
-# create_project cmd_gather_block cmd_gather_block -part xc7a100tcsg324-1 -force
-
-# ---------------------- RTL ----------------------
-# Add only RTL needed for cmd_gather
-# (Adjust the glob if cmd_gather depends on other submodules)
-# add_files -fileset sources_1 [glob ./src/**/*.sv]
-
-# ---------------------- Simulation ----------------------
-# Add block-level simulation files only
-
-# In your build_cmd_gather.tcl
-# add_files -fileset sim_1 [glob ./src/common/cmd_pkg.sv]
-# add_files -fileset sources_1 [glob ./src/common/cmd_pkg.sv]
-
-
 ##########################
 # ===============================================================
 # TCL script to add files for cmd_gather block simulation
-# Explicit compile order
 # ===============================================================
+
+# Creating a separate project for Nexys A7
+# create_project cmd_gather_tb cmd_gather_tb -part xc7a50ticsg324-1L -force
 
 # Clear previous sources
 reset_project
 
+# ---------------------- RTL ----------------------
+# Add only RTL needed for cmd_gather sim_1
+add_files -fileset sim_1 ./src/common/cmd_pkg.sv
+
+# Add RTL Files
+add_files -fileset sim_1 ./src/uart/uart_rx.sv
+add_files -fileset sim_1 ./src/fifo/byte_fifo.sv
+add_files -fileset sim_1 ./src/core/cmd_parser.sv
+add_files -fileset sim_1 ./src/uart/baud_tick_gen.sv
+
+
+# ---------------------- Simulation ----------------------
+# add baseline uvm_components
+add_files -fileset sim_1 ./sim/common/uvm/uvm_component.sv
+add_files -fileset sim_1 ./sim/common/uvm/uvm_driver.sv
+add_files -fileset sim_1 ./sim/common/uvm/uvm_monitor.sv
+add_files -fileset sim_1 ./sim/common/uvm/uvm_sequencer.sv
+add_files -fileset sim_1 ./sim/common/uvm/uvm_sequence_itm.sv
+add_files -fileset sim_1 ./sim/common/uvm/uvm_scoreboard.sv
+
 # Add testbench sources
-add_files -fileset sim_1 ../sim/block/cmd_gather_tb/cmd_gather.f
-add_files -fileset sources_1 ../sim/block/cmd_gather_tb/cmd_gather.f
+add_files -fileset sim_1 ./sim/block/cmd_gather_tb/common_cfg.sv
+add_files -fileset sim_1 ./sim/block/cmd_gather_tb/cmd_gather_interface.sv
+add_files -fileset sim_1 ./sim/block/cmd_gather_tb/cmd_gather_transaction.sv
+add_files -fileset sim_1 ./sim/block/cmd_gather_tb/cmd_gather_driver.sv
+add_files -fileset sim_1 ./sim/block/cmd_gather_tb/cmd_gather_monitor.sv
+add_files -fileset sim_1 ./sim/block/cmd_gather_tb/cmd_gather_sequencer.sv
+add_files -fileset sim_1 ./sim/block/cmd_gather_tb/cmd_gather_scoreboard.sv
+add_files -fileset sim_1 ./sim/block/cmd_gather_tb/cmd_gather_agent.sv
+add_files -fileset sim_1 ./sim/block/cmd_gather_tb/cmd_gather_top.sv
+add_files -fileset sim_1 ./sim/block/cmd_gather_tb/cmd_gather_tlb.sv
+
+
+# ---------------------- RTL ----------------------
+# Add only RTL needed for cmd_gather sim_1
+add_files -fileset sources_1 ./src/common/cmd_pkg.sv
+
+# Add RTL Files
+add_files -fileset sources_1 ./src/uart/uart_rx.sv
+add_files -fileset sources_1 ./src/fifo/byte_fifo.sv
+add_files -fileset sources_1 ./src/core/cmd_parser.sv
+add_files -fileset sources_1 ./src/uart/baud_tick_gen.sv
+
+# ---------------------- Simulation ----------------------
+# add baseline uvm_components
+add_files -fileset sources_1 ./sim/common/uvm/uvm_component.sv
+add_files -fileset sources_1 ./sim/common/uvm/uvm_driver.sv
+add_files -fileset sources_1 ./sim/common/uvm/uvm_monitor.sv
+add_files -fileset sources_1 ./sim/common/uvm/uvm_sequencer.sv
+add_files -fileset sources_1 ./sim/common/uvm/uvm_sequence_itm.sv
+add_files -fileset sources_1 ./sim/common/uvm/uvm_scoreboard.sv
+
+# Add testbench sources
+add_files -fileset sources_1 ./sim/block/cmd_gather_tb/common_cfg.sv
+add_files -fileset sources_1 ./sim/block/cmd_gather_tb/cmd_gather_interface.sv
+add_files -fileset sources_1 ./sim/block/cmd_gather_tb/cmd_gather_transaction.sv
+add_files -fileset sources_1 ./sim/block/cmd_gather_tb/cmd_gather_driver.sv
+add_files -fileset sources_1 ./sim/block/cmd_gather_tb/cmd_gather_monitor.sv
+add_files -fileset sources_1 ./sim/block/cmd_gather_tb/cmd_gather_sequencer.sv
+add_files -fileset sources_1 ./sim/block/cmd_gather_tb/cmd_gather_scoreboard.sv
+add_files -fileset sources_1 ./sim/block/cmd_gather_tb/cmd_gather_agent.sv
+add_files -fileset sources_1 ./sim/block/cmd_gather_tb/cmd_gather_top.sv
+add_files -fileset sources_1 ./sim/block/cmd_gather_tb/cmd_gather_tlb.sv
+
 
 
 # Update compile order
@@ -45,10 +87,5 @@ puts "TCL project setup for cmd_gather block complete."
 
 
 # Uncomment if you want Vivado to launch a run or simulation
-# launch_runs synth_1
-move_files [get_files  C:/Users/zane/projects/fpga/uart_memaccess/sim/block/cmd_gather_tb/cmd_gather_tlb.sv]
-set_property top cmd_gather_tlb [current_fileset]
-export_ip_user_files -of_objects  [get_files C:/Users/zane/projects/fpga/uart_memaccess/sim/block/cmd_gather_tb/cmd_gather.f] -no_script -reset -force -quiet
-# remove_files  C:/Users/zane/projects/fpga/uart_memaccess/sim/block/cmd_gather_tb/cmd_gather.f
 # launch_simulation
 

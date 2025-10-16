@@ -139,10 +139,10 @@ module cmd_execute_tlb(
         .out_tx_en(cmd_resp_wr_en)
     );
 
-    /////////////////////////////////
-    ///////////////////// REGISTER
+    /////////////////////////////////////
+    ///////////////////// Single Port RAM
 
-    register_bank register_bank(
+    ram ram(
         //input
         .clk(clk),
         .write_en(reg_write_en),
