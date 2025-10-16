@@ -8,6 +8,7 @@
 *.ip_user_files/
 *.Xil/
 webtalk*
+.vscode/
 
 # Simulation dumps
 *.vcd
