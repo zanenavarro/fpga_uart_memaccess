@@ -125,13 +125,14 @@ All these methodologies are very similar in that they utilize:
 
 ### MEM_ACCESS
 
+- Finally, we have our system level top module which brings together all pieces from the UART Receiving, command execution and then back to UART transmission.
+
+    - **GOAL**: Verify correctness of UART Receiving, Command Execution, and UART Response
+
 
 ### MEM_ACCESS_TB
 
+![alt text](./images/image_system.png)
 
 
-
-
-
-
-### MEM_ACCESS
+---
